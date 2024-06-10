@@ -16,13 +16,12 @@ public class SubWeapon : MonoBehaviour
 
     [SerializeField] GameObject boomerang = null;
     [SerializeField] GameObject boomerangTraget = null;
-    private float boomerangSpeed = 10f;
+    private float boomerangSpeed = 13f;
     private Vector3 _boomerangPos;
 
     bool existsBoomerang = false;
     bool shouldBoomerangRe = false;
-    bool _boomerangCnt = false;
-
+    bool canReturn = false;
     //かまいたち用
 
     [SerializeField] GameObject kamaitachi = null;
@@ -56,7 +55,8 @@ public class SubWeapon : MonoBehaviour
             _damage = 50;
             KunaiWeapon();
         }
-        if (Input.GetKeyDown(KeyCode.Q) && existsBoomerang == false)
+         //&& existsBoomerang == false
+        if (Input.GetKeyDown(KeyCode.Q))
         {
             _damage = 80;
             BoomerangWeapon();
@@ -77,13 +77,14 @@ public class SubWeapon : MonoBehaviour
             print("到着地点" + _boomerangPos);
             print("ブーメラン位置" + boomerang.transform.position);
             print("ブーメランターゲット" + boomerangTraget.transform.position);
+            print(shouldBoomerangRe);
         }
     }
         private void KamaitachiWeapon()
     {
-        StartCoroutine(TestCoroutine(2,0));   
+        StartCoroutine(WeaponCoroutine(2,0));   
     }
-    IEnumerator TestCoroutine(float time,int switchCor)
+    IEnumerator WeaponCoroutine(float time,int switchCor)
     {
         print("コルーチン");
         yield return new WaitForSeconds(time);
@@ -94,15 +95,20 @@ public class SubWeapon : MonoBehaviour
                 yield return new WaitForSeconds (2);
                 kamaitachi.SetActive (false);
                 break;
+            case 1:
+                print("戻り");
+                boomerangSpeed = boomerangSpeed + 3;
+                shouldBoomerangRe = true;
+                canReturn = true;
+                break;
             default: 
                 break;
-            //case 1:
-            //    break;
-            //case 2:
-            //    break;
-            //case 3:
-            //    break;
-            //case 4:
+       
+                //case 2:
+                //    break;
+                //case 3:
+                //    break;
+                //case 4:
                 //break;
         }
       
@@ -115,6 +121,7 @@ public class SubWeapon : MonoBehaviour
         boomerang.transform.position = _playerPos;
         _boomerangPos = boomerangTraget.transform.position;
         existsBoomerang = true;
+        StartCoroutine(WeaponCoroutine(1.5f, 1));
     }
     private void BoomerangOperation()
     {
@@ -130,14 +137,6 @@ public class SubWeapon : MonoBehaviour
             //ブーメラン一回目の軌道
             boomerang.transform.position = Vector2.MoveTowards
            (boomerang.transform.position, _boomerangPos, boomerangSpeed * Time.deltaTime);
-          
-        }
-
-        if (boomerang.transform.position == _boomerangPos)
-        {
-            print("到着");
-            boomerangSpeed = boomerangSpeed + 3;
-            shouldBoomerangRe = true;
         }
 
     }
@@ -162,21 +161,19 @@ public class SubWeapon : MonoBehaviour
     }
     private void OnTriggerEnter2D(Collider2D collision)
     {
-        if(collision.gameObject==boomerang)
+        //if (collision.gameObject.CompareTag("PlayerWeapon"))
+        //{
+        //    print("HIIIIT");
+        //}
+        if (collision.gameObject == boomerang)
         {
-            if (_boomerangCnt)
+            if (canReturn)
             {
                 print("消滅");
-                _boomerangCnt = false;
+                canReturn = false;
                 shouldBoomerangRe = false;
                 existsBoomerang = false;
-                boomerang.transform.position = _playerPos;
-                _boomerangPos = boomerangTraget.transform.position;
                 boomerang.SetActive(false);
-            }
-            else
-            {
-                _boomerangCnt = true;
             }
         }
     }
