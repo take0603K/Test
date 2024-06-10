@@ -17,9 +17,14 @@ public class EnemyStatus : MonoBehaviour
     {
         
     }
+    private void DamageCtrl(Collider2D weapon)
+    {
+       
+    }
     private void OnTriggerEnter2D(Collider2D collision)
     {
         print("hit");
+        DamageCtrl(collision);
         int damage = subWeapon._damage;
         if (collision.gameObject.CompareTag("PlayerWeapon"))
         {

@@ -16,7 +16,7 @@ public class SubWeapon : MonoBehaviour
 
     [SerializeField] GameObject boomerang = null;
     [SerializeField] GameObject boomerangTraget = null;
-    private float boomerangSpeed = 13f;
+    private float boomerangSpeed = 15f;
     private Vector3 _boomerangPos;
 
     bool existsBoomerang = false;
@@ -32,9 +32,6 @@ public class SubWeapon : MonoBehaviour
     PrayerC playerScript;
     public int _damage=0;
 
-  
-
-    private float startAt;
     void Start()
     {
         _playerPos = player.transform.position;
@@ -52,11 +49,10 @@ public class SubWeapon : MonoBehaviour
         //以下テスト用
         if (Input.GetKeyDown(KeyCode.E))
         {
-            _damage = 50;
+            _damage = 0;
             KunaiWeapon();
         }
-         //&& existsBoomerang == false
-        if (Input.GetKeyDown(KeyCode.Q))
+        if (Input.GetKeyDown(KeyCode.Q) && existsBoomerang == false)
         {
             _damage = 80;
             BoomerangWeapon();
@@ -86,7 +82,6 @@ public class SubWeapon : MonoBehaviour
     }
     IEnumerator WeaponCoroutine(float time,int switchCor)
     {
-        print("コルーチン");
         yield return new WaitForSeconds(time);
         switch(switchCor)  
         {
@@ -97,7 +92,7 @@ public class SubWeapon : MonoBehaviour
                 break;
             case 1:
                 print("戻り");
-                boomerangSpeed = boomerangSpeed + 3;
+                boomerangSpeed = boomerangSpeed + 5;
                 shouldBoomerangRe = true;
                 canReturn = true;
                 break;
@@ -117,11 +112,10 @@ public class SubWeapon : MonoBehaviour
     {
         _playerPos = player.transform.position;
         boomerang.SetActive(true);
-        boomerangSpeed = 10;
         boomerang.transform.position = _playerPos;
         _boomerangPos = boomerangTraget.transform.position;
         existsBoomerang = true;
-        StartCoroutine(WeaponCoroutine(1.5f, 1));
+        StartCoroutine(WeaponCoroutine(1.2f, 1));
     }
     private void BoomerangOperation()
     {
@@ -144,11 +138,9 @@ public class SubWeapon : MonoBehaviour
     {
         _playerPos = player.transform.position;
         float _time=1f;
-        print("生成");
         GameObject newkunai = Instantiate(kunai);
         kunaiRd = newkunai.GetComponent<Rigidbody2D>();
         newkunai.transform.position = _playerPos;
-
         if (playerScript.rightNow == true)
         {
             this.kunaiRd.AddForce(new Vector2(1500f, 0f));
@@ -161,10 +153,6 @@ public class SubWeapon : MonoBehaviour
     }
     private void OnTriggerEnter2D(Collider2D collision)
     {
-        //if (collision.gameObject.CompareTag("PlayerWeapon"))
-        //{
-        //    print("HIIIIT");
-        //}
         if (collision.gameObject == boomerang)
         {
             if (canReturn)
@@ -173,6 +161,7 @@ public class SubWeapon : MonoBehaviour
                 canReturn = false;
                 shouldBoomerangRe = false;
                 existsBoomerang = false;
+                boomerangSpeed = 15;
                 boomerang.SetActive(false);
             }
         }
