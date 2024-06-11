@@ -30,6 +30,10 @@ public class EnemyStatus : MonoBehaviour
         {
             _enemyHp = _enemyHp - damage;
             print(_enemyHp);
+            if(_enemyHp<=0)
+            {
+                Destroy(this.gameObject);
+            }
         }
     }
 }

@@ -1152,6 +1152,7 @@ MonoBehaviour:
   boomerangTraget: {fileID: 415060164}
   kamaitachi: {fileID: 770102332}
   _damage: 0
+  _weaponSelect: 2
 --- !u!114 &1971243235
 MonoBehaviour:
   m_ObjectHideFlags: 0

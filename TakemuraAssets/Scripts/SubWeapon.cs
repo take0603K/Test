@@ -6,6 +6,14 @@ using UnityEngine;
 
 public class SubWeapon : MonoBehaviour
 {
+    //   if (Input.GetKeyDown(KeyCode.E))の条件をコントローラーのスキル発動キーに置き換えて！！！
+    public enum WeaponSelect
+    {
+        Sword,
+        Kunai,
+        Boomerang,
+        kamaitachi,
+    }
     //クナイ用
     [SerializeField] GameObject player = null;
     [SerializeField] GameObject kunai = null;
@@ -31,7 +39,9 @@ public class SubWeapon : MonoBehaviour
     private Vector2 _playerPos;
     PrayerC playerScript;
     public int _damage=0;
-
+    public WeaponSelect _weaponSelect;
+  
+  
     void Start()
     {
         _playerPos = player.transform.position;
@@ -46,27 +56,30 @@ public class SubWeapon : MonoBehaviour
     }
     void Update()
     {
-        //以下テスト用
-        if (Input.GetKeyDown(KeyCode.E))
+      switch(_weaponSelect)
         {
-            _damage = 0;
-            KunaiWeapon();
+            case WeaponSelect.Sword:
+                break;
+            case WeaponSelect.Kunai:
+                _damage = 40;
+                KunaiWeapon();
+                break;
+            case WeaponSelect.Boomerang:
+                _damage = 80;
+                BoomerangWeapon();
+                break;
+            case WeaponSelect.kamaitachi:
+                _damage = 300;
+                KamaitachiWeapon();
+                break;
+
         }
-        if (Input.GetKeyDown(KeyCode.Q) && existsBoomerang == false)
-        {
-            _damage = 80;
-            BoomerangWeapon();
-        }
-        if (Input.GetKeyDown(KeyCode.W))
-        {
-            _damage = 300;
-            KamaitachiWeapon();
-        }
+        //ブーメランの戻り処理かなんか
         if (existsBoomerang == true)
         {
             BoomerangOperation();
         }
-
+        //以下テスト用
         if (Input.GetKeyDown(KeyCode.T))
         {
             print("プレイヤー"+_playerPos) ;
@@ -78,7 +91,11 @@ public class SubWeapon : MonoBehaviour
     }
         private void KamaitachiWeapon()
     {
-        StartCoroutine(WeaponCoroutine(2,0));   
+        if (Input.GetKeyDown(KeyCode.E))
+        {
+            StartCoroutine(WeaponCoroutine(2, 0));
+        }
+       
     }
     IEnumerator WeaponCoroutine(float time,int switchCor)
     {
@@ -110,12 +127,16 @@ public class SubWeapon : MonoBehaviour
     }
     private void BoomerangWeapon()
     {
-        _playerPos = player.transform.position;
-        boomerang.SetActive(true);
-        boomerang.transform.position = _playerPos;
-        _boomerangPos = boomerangTraget.transform.position;
-        existsBoomerang = true;
-        StartCoroutine(WeaponCoroutine(1.2f, 1));
+        if (Input.GetKeyDown(KeyCode.E) && existsBoomerang == false)
+        {
+            _playerPos = player.transform.position;
+            boomerang.SetActive(true);
+            boomerang.transform.position = _playerPos;
+            _boomerangPos = boomerangTraget.transform.position;
+            existsBoomerang = true;
+            StartCoroutine(WeaponCoroutine(1.2f, 1));
+        }
+       
     }
     private void BoomerangOperation()
     {
@@ -136,20 +157,25 @@ public class SubWeapon : MonoBehaviour
     }
      private void KunaiWeapon()
     {
-        _playerPos = player.transform.position;
-        float _time=1f;
-        GameObject newkunai = Instantiate(kunai);
-        kunaiRd = newkunai.GetComponent<Rigidbody2D>();
-        newkunai.transform.position = _playerPos;
-        if (playerScript.rightNow == true)
+        if (Input.GetKeyDown(KeyCode.E))
         {
-            this.kunaiRd.AddForce(new Vector2(1500f, 0f));
+            _playerPos = player.transform.position;
+            float _time = 1f;
+            GameObject newkunai = Instantiate(kunai);
+            kunaiRd = newkunai.GetComponent<Rigidbody2D>();
+            newkunai.transform.position = _playerPos;
+            if (playerScript.rightNow == true)
+            {
+                this.kunaiRd.AddForce(new Vector2(1500f, 0f));
+            }
+            else
+            {
+                this.kunaiRd.AddForce(new Vector2(-1500f, 0f));
+            }
+            Destroy(newkunai, _time);
+          
         }
-        else
-        {
-            this.kunaiRd.AddForce(new Vector2(-1500f, 0f));
-        }
-        Destroy(newkunai, _time);
+       
     }
     private void OnTriggerEnter2D(Collider2D collision)
     {
