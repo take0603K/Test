@@ -5,27 +5,13 @@ using UnityEngine;
 public class EnemyStatus : MonoBehaviour
 {
     [SerializeField] GameObject playerObj;
-    SubWeapon subWeapon;
+    Damage Damage;
     [SerializeField]int _enemyHp = 500;
-    void Start()
-    {
-        subWeapon=playerObj.gameObject.GetComponent<SubWeapon>();
-    }
-
-   
-    void Update()
-    {
-        
-    }
-    private void DamageCtrl(Collider2D weapon)
-    {
-       
-    }
     private void OnTriggerEnter2D(Collider2D collision)
     {
         print("hit");
-        DamageCtrl(collision);
-        int damage = subWeapon._damage;
+        Damage = collision.gameObject.GetComponent<Damage>();
+        int damage = Damage._Damage;
         if (collision.gameObject.CompareTag("PlayerWeapon"))
         {
             _enemyHp = _enemyHp - damage;

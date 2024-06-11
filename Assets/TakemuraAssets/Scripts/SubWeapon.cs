@@ -7,15 +7,19 @@ using UnityEngine;
 public class SubWeapon : MonoBehaviour
 {
     //   if (Input.GetKeyDown(KeyCode.E))の条件をコントローラーのスキル発動キーに置き換えて！！！
+    /// <summary>
+    /// 武器ごとに振られた固有番号管理用のEnum
+    /// </summary>
     public enum WeaponSelect
     {
-        Sword,
-        Kunai,
-        Boomerang,
-        kamaitachi,
+        Sword=0,
+        Kunai=1,
+        Boomerang=2,
+        kamaitachi=3,
     }
     //クナイ用
-    [SerializeField] GameObject player = null;
+    //プレイヤー位置とクナイオブジェ
+    [Header("プレイヤー入れてね")][SerializeField] GameObject player = null;
     [SerializeField] GameObject kunai = null;
  
     Rigidbody2D kunaiRd;
@@ -27,9 +31,9 @@ public class SubWeapon : MonoBehaviour
     private float boomerangSpeed = 15f;
     private Vector3 _boomerangPos;
 
-    bool existsBoomerang = false;
-    bool shouldBoomerangRe = false;
-    bool canReturn = false;
+    private  bool _existsBoomerang = default;
+    private  bool _shouldBoomerangRe = default;
+    private  bool _canReturn = default;
     //かまいたち用
 
     [SerializeField] GameObject kamaitachi = null;
@@ -39,7 +43,7 @@ public class SubWeapon : MonoBehaviour
     private Vector2 _playerPos;
     PrayerC playerScript;
     public int _damage=0;
-    public WeaponSelect _weaponSelect;
+    public WeaponSelect _weaponSelect=0;
   
   
     void Start()
@@ -47,12 +51,11 @@ public class SubWeapon : MonoBehaviour
         _playerPos = player.transform.position;
         kunai.transform.position = _playerPos;
         playerScript = player.GetComponent<PrayerC>();
+        _weaponSelect = 0;
 
 
         boomerang.SetActive(false);
-        kamaitachi.SetActive(false);
-
-       
+        kamaitachi.SetActive(false);    
     }
     void Update()
     {
@@ -61,41 +64,43 @@ public class SubWeapon : MonoBehaviour
             case WeaponSelect.Sword:
                 break;
             case WeaponSelect.Kunai:
-                _damage = 40;
                 KunaiWeapon();
                 break;
             case WeaponSelect.Boomerang:
-                _damage = 80;
                 BoomerangWeapon();
                 break;
             case WeaponSelect.kamaitachi:
-                _damage = 300;
                 KamaitachiWeapon();
                 break;
-
+        }
+        //武器の切り替え
+        if (Input.GetKeyDown(KeyCode.R))
+        {
+         
+            if ((int)_weaponSelect == 3)
+            {
+                print("押してるよ");
+                _weaponSelect = 0;
+            }
+            else
+            {
+                print((int)_weaponSelect);
+             _weaponSelect++ ;
+            }
         }
         //ブーメランの戻り処理かなんか
-        if (existsBoomerang == true)
+        if (_existsBoomerang)
         {
             BoomerangOperation();
         }
         //以下テスト用
-        if (Input.GetKeyDown(KeyCode.T))
-        {
-            print("プレイヤー"+_playerPos) ;
-            print("到着地点" + _boomerangPos);
-            print("ブーメラン位置" + boomerang.transform.position);
-            print("ブーメランターゲット" + boomerangTraget.transform.position);
-            print(shouldBoomerangRe);
-        }
     }
         private void KamaitachiWeapon()
     {
         if (Input.GetKeyDown(KeyCode.E))
         {
             StartCoroutine(WeaponCoroutine(2, 0));
-        }
-       
+        }    
     }
     IEnumerator WeaponCoroutine(float time,int switchCor)
     {
@@ -110,8 +115,8 @@ public class SubWeapon : MonoBehaviour
             case 1:
                 print("戻り");
                 boomerangSpeed = boomerangSpeed + 5;
-                shouldBoomerangRe = true;
-                canReturn = true;
+                _shouldBoomerangRe = true;
+                _canReturn = true;
                 break;
             default: 
                 break;
@@ -123,29 +128,27 @@ public class SubWeapon : MonoBehaviour
                 //case 4:
                 //break;
         }
-      
     }
     private void BoomerangWeapon()
     {
-        if (Input.GetKeyDown(KeyCode.E) && existsBoomerang == false)
+        if (Input.GetKeyDown(KeyCode.E) && !_existsBoomerang)
         {
             _playerPos = player.transform.position;
             boomerang.SetActive(true);
             boomerang.transform.position = _playerPos;
             _boomerangPos = boomerangTraget.transform.position;
-            existsBoomerang = true;
+            _existsBoomerang = true;
             StartCoroutine(WeaponCoroutine(1.2f, 1));
         }
        
     }
     private void BoomerangOperation()
     {
-        if (shouldBoomerangRe)
+        if (_shouldBoomerangRe)
         {
             _boomerangPos = player.transform.position;
             boomerang.transform.position = Vector2.MoveTowards
                 (boomerang.transform.position, _boomerangPos, boomerangSpeed * Time.deltaTime);
-            return;
         }
         else
         {
@@ -160,11 +163,11 @@ public class SubWeapon : MonoBehaviour
         if (Input.GetKeyDown(KeyCode.E))
         {
             _playerPos = player.transform.position;
-            float _time = 1f;
+            float time = 1f;
             GameObject newkunai = Instantiate(kunai);
             kunaiRd = newkunai.GetComponent<Rigidbody2D>();
             newkunai.transform.position = _playerPos;
-            if (playerScript.rightNow == true)
+            if (playerScript.rightNow)
             {
                 this.kunaiRd.AddForce(new Vector2(1500f, 0f));
             }
@@ -172,7 +175,7 @@ public class SubWeapon : MonoBehaviour
             {
                 this.kunaiRd.AddForce(new Vector2(-1500f, 0f));
             }
-            Destroy(newkunai, _time);
+            Destroy(newkunai, time);
           
         }
        
@@ -181,12 +184,12 @@ public class SubWeapon : MonoBehaviour
     {
         if (collision.gameObject == boomerang)
         {
-            if (canReturn)
+            if (_canReturn)
             {
                 print("消滅");
-                canReturn = false;
-                shouldBoomerangRe = false;
-                existsBoomerang = false;
+                _canReturn = false;
+                _shouldBoomerangRe = false;
+                _existsBoomerang = false;
                 boomerangSpeed = 15;
                 boomerang.SetActive(false);
             }
