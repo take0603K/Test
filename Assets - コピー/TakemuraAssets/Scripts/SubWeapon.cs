@@ -31,8 +31,9 @@ public class SubWeapon : MonoBehaviour
     private float boomerangSpeed = 15f;
     private Vector3 _boomerangPos;
 
+
+    //既に投げた後かの判定・ブーメランが戻る位置についたかの判定
     private  bool _existsBoomerang = default;
-    private  bool _shouldBoomerangRe = default;
     private  bool _canReturn = default;
     //かまいたち用
 
@@ -48,17 +49,23 @@ public class SubWeapon : MonoBehaviour
   
     void Start()
     {
+       
         _playerPos = player.transform.position;
         kunai.transform.position = _playerPos;
         playerScript = player.GetComponent<PrayerC>();
         _weaponSelect = 0;
-
+        /**プレイヤーの位置を格納
+         * プレイヤー位置にクナイを格納
+         * プレイヤーのスクリプトを格納
+         * 現在武器の初期化
+         **/
 
         boomerang.SetActive(false);
         kamaitachi.SetActive(false);    
     }
     void Update()
     {
+        //選択されている武器をアップデートに呼び出す
       switch(_weaponSelect)
         {
             case WeaponSelect.Sword:
@@ -74,9 +81,9 @@ public class SubWeapon : MonoBehaviour
                 break;
         }
         //武器の切り替え
+        //テスト用の機能なのでインベントリ機能ができたら置き換わります
         if (Input.GetKeyDown(KeyCode.R))
         {
-         
             if ((int)_weaponSelect == 3)
             {
                 print("押してるよ");
@@ -88,20 +95,14 @@ public class SubWeapon : MonoBehaviour
              _weaponSelect++ ;
             }
         }
-        //ブーメランの戻り処理かなんか
+        //ブーメランの移動処理スイッチ文に入れると多分ばぐります
         if (_existsBoomerang)
         {
             BoomerangOperation();
         }
         //以下テスト用
     }
-        private void KamaitachiWeapon()
-    {
-        if (Input.GetKeyDown(KeyCode.E))
-        {
-            StartCoroutine(WeaponCoroutine(2, 0));
-        }    
-    }
+   
     IEnumerator WeaponCoroutine(float time,int switchCor)
     {
         yield return new WaitForSeconds(time);
@@ -115,7 +116,6 @@ public class SubWeapon : MonoBehaviour
             case 1:
                 print("戻り");
                 boomerangSpeed = boomerangSpeed + 5;
-                _shouldBoomerangRe = true;
                 _canReturn = true;
                 break;
             default: 
@@ -129,23 +129,34 @@ public class SubWeapon : MonoBehaviour
                 //break;
         }
     }
+    private void KamaitachiWeapon()
+    {
+        if (Input.GetKeyDown(KeyCode.E))
+        {
+            //二秒後にスキル発動
+            StartCoroutine(WeaponCoroutine(2, 0));
+        }
+    }
     private void BoomerangWeapon()
     {
         if (Input.GetKeyDown(KeyCode.E) && !_existsBoomerang)
         {
+            //ブーメランの位置などをセットしてブーメランを投げる
             _playerPos = player.transform.position;
             boomerang.SetActive(true);
             boomerang.transform.position = _playerPos;
             _boomerangPos = boomerangTraget.transform.position;
             _existsBoomerang = true;
+            //1.2秒後にブーメランの移動向きを変更する
             StartCoroutine(WeaponCoroutine(1.2f, 1));
         }
        
     }
     private void BoomerangOperation()
     {
-        if (_shouldBoomerangRe)
+        if (_canReturn)
         {
+            //ブーメランの戻り軌道
             _boomerangPos = player.transform.position;
             boomerang.transform.position = Vector2.MoveTowards
                 (boomerang.transform.position, _boomerangPos, boomerangSpeed * Time.deltaTime);
@@ -160,13 +171,17 @@ public class SubWeapon : MonoBehaviour
     }
      private void KunaiWeapon()
     {
+        //クナイ生成
         if (Input.GetKeyDown(KeyCode.E))
         {
+            //現在地にクナイを生成して指定時間後に消去する
             _playerPos = player.transform.position;
             float time = 1f;
             GameObject newkunai = Instantiate(kunai);
             kunaiRd = newkunai.GetComponent<Rigidbody2D>();
             newkunai.transform.position = _playerPos;
+            //プレイヤーの向きによって射出方向を決定
+            //右に飛ばすelseは左
             if (playerScript.rightNow)
             {
                 this.kunaiRd.AddForce(new Vector2(1500f, 0f));
@@ -182,13 +197,14 @@ public class SubWeapon : MonoBehaviour
     }
     private void OnTriggerEnter2D(Collider2D collision)
     {
+        //プレイヤーにぶつかったオブジェクトがブーメランなら処理をする
         if (collision.gameObject == boomerang)
         {
+            //既に戻り処理に突入しているのなら回収する
             if (_canReturn)
             {
                 print("消滅");
                 _canReturn = false;
-                _shouldBoomerangRe = false;
                 _existsBoomerang = false;
                 boomerangSpeed = 15;
                 boomerang.SetActive(false);
