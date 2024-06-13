@@ -4,9 +4,8 @@ using UnityEngine;
 
 public class treasureBox : MonoBehaviour
 {
-    [SerializeField] GameObject _Invent = null;
-    [SerializeField]
-    public List<SubWeapon.WeaponSelect> _itemBoxList =
+    [SerializeField] private GameObject _Invent = null;
+    [SerializeField] private List<SubWeapon.WeaponSelect> _itemBoxList =
         new List<SubWeapon.WeaponSelect>();
     [SerializeField] private int _item = 0;
     private bool _openBox = default;

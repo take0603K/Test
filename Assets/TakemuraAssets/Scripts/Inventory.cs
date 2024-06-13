@@ -8,7 +8,8 @@ public class Inventory : MonoBehaviour
     //[SerializeField]
     //private List<SubWeapon.WeaponSelect> _itemBoxList =
     //   new List<SubWeapon.WeaponSelect>();
-    [SerializeField] public int[] _inventory = { 0, 1, 0 };
+    [SerializeField] public SubWeapon.WeaponSelect[]_inventory = { 0, (SubWeapon.WeaponSelect)(int)1,0 };
+    private int _maxIndex = 2;
   
     // Start is called before the first frame update
     void Start()
@@ -26,9 +27,13 @@ public class Inventory : MonoBehaviour
     public void InventBox(SubWeapon.WeaponSelect select)
     {
         print(select);
-        for (int i = 0; _inventory[i] == 0; i++)
+        for (int i = 0; i<=_maxIndex; i++)
         {
-
+            if (_inventory[i]==0)
+            {
+                _inventory[i] = select;
+                break;
+            }
         }
         print("ŒðŠ·‚µ‚È‚³‚¢");
     }

@@ -12,10 +12,11 @@ public class SubWeapon : MonoBehaviour
     /// </summary>
     public enum WeaponSelect
     {
-        Sword=0,
-        Kunai=1,
-        _boomerang=2,
-        kamaitachi=3,
+        nasi=0,
+        Sword=1,
+        Kunai=2,
+        _boomerang=3,
+        kamaitachi=4,
     }
     //クナイ用
     //プレイヤー位置とクナイオブジェ
@@ -85,7 +86,7 @@ public class SubWeapon : MonoBehaviour
         //テスト用の機能なのでインベントリ機能ができたら置き換わります
         if (Input.GetKeyDown(KeyCode.R))
         {
-            if ((int)_weaponSelect == 3)
+            if ((int)_weaponSelect == 4)
             {
                 print("押してるよ");
                 _weaponSelect = 0;
