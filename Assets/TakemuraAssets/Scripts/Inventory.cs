@@ -5,37 +5,42 @@ using UnityEngine;
 
 public class Inventory : MonoBehaviour
 {
+    public enum WeaponSelect
+    {
+        nasi = 0,
+        Sword = 1,
+        Kunai = 2,
+        _boomerang = 3,
+        kamaitachi = 4,
+    }
     //[SerializeField]
     //private List<SubWeapon.WeaponSelect> _itemBoxList =
     //   new List<SubWeapon.WeaponSelect>();
-    [SerializeField] public SubWeapon.WeaponSelect[]_inventory = { 0, (SubWeapon.WeaponSelect)(int)1,0 };
-    private int _maxIndex = 2;
+    [SerializeField] public WeaponSelect[]_inventory = { 0, (WeaponSelect)(int)1,0 };
+    public int _maxIndex = 2;
   
-    // Start is called before the first frame update
-    void Start()
-    {
-        
-    }
-    // Update is called once per frame
-    void Update()
-    {
-        
-    }
     //List<SubWeapon.WeaponSelect>
     //List<SubWeapon.WeaponSelect> selects,int weaponNo
     //SubWeapon.WeaponSelect.aaaa
-    public void InventBox(SubWeapon.WeaponSelect select)
+    public void InventBox(WeaponSelect select)
     {
+        int itemCnt = 0;
         print(select);
         for (int i = 0; i<=_maxIndex; i++)
         {
+            itemCnt++;
             if (_inventory[i]==0)
             {
                 _inventory[i] = select;
                 break;
             }
         }
-        print("交換しなさい");
+        //インベントリに空きがなかった場合交換処理を呼び出す
+        if(itemCnt<=_maxIndex)
+        {
+            print("交換しなさい");
+        }
+     
     }
 
     //internal void InventBox(SubWeapon.WeaponSelect weaponSelect, int item)

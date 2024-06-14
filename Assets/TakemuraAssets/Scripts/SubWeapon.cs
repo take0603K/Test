@@ -10,14 +10,7 @@ public class SubWeapon : MonoBehaviour
     /// <summary>
     /// 武器ごとに振られた固有番号管理用のEnum
     /// </summary>
-    public enum WeaponSelect
-    {
-        nasi=0,
-        Sword=1,
-        Kunai=2,
-        _boomerang=3,
-        kamaitachi=4,
-    }
+   
     //クナイ用
     //プレイヤー位置とクナイオブジェ
     [Header("プレイヤー入れてね")][SerializeField] GameObject player = null;
@@ -46,16 +39,18 @@ public class SubWeapon : MonoBehaviour
     private Vector2 _playerPos;
     PrayerC playerScript;
     public int _damage=0;
-    public WeaponSelect _weaponSelect=0;
+    private int _indexCnt = 1;
+    private Inventory _weaponInventory;
   
   
     void Start()
     {
-       
+
+
+
         _playerPos = player.transform.position;
        // kunai.transform.position = _playerPos;
         playerScript = player.GetComponent<PrayerC>();
-        _weaponSelect = 0;
         /**プレイヤーの位置を格納
          * プレイヤー位置にクナイを格納
          * プレイヤーのスクリプトを格納
@@ -68,17 +63,19 @@ public class SubWeapon : MonoBehaviour
     void Update()
     {
         //選択されている武器をアップデートに呼び出す
-      switch(_weaponSelect)
+      switch(_weaponInventory._inventory[_indexCnt])
         {
-            case WeaponSelect.Sword:
+            case Inventory.WeaponSelect.nasi:
                 break;
-            case WeaponSelect.Kunai:
+            case Inventory.WeaponSelect.Sword:
+                break;
+            case Inventory.WeaponSelect.Kunai:
                 KunaiWeapon();
                 break;
-            case WeaponSelect._boomerang:
+            case Inventory.WeaponSelect._boomerang:
                 _boomerangWeapon();
                 break;
-            case WeaponSelect.kamaitachi:
+            case Inventory.WeaponSelect.kamaitachi:
                 KamaitachiWeapon();
                 break;
         }
@@ -86,15 +83,15 @@ public class SubWeapon : MonoBehaviour
         //テスト用の機能なのでインベントリ機能ができたら置き換わります
         if (Input.GetKeyDown(KeyCode.R))
         {
-            if ((int)_weaponSelect == 4)
+            if (_indexCnt == _weaponInventory._maxIndex)
             {
-                print("押してるよ");
-                _weaponSelect = 0;
+                _indexCnt = 0;
+                print("現在のインベントリ番号" + _indexCnt);
             }
             else
             {
-                print((int)_weaponSelect);
-             _weaponSelect++ ;
+                _indexCnt = _indexCnt + 1;
+                print("現在のインベントリ番号" + _indexCnt);
             }
         }
         //ブーメランの移動処理スイッチ文に入れると多分ばぐります

@@ -5,8 +5,8 @@ using UnityEngine;
 public class treasureBox : MonoBehaviour
 {
     [SerializeField] private GameObject _Invent = null;
-    [SerializeField] private List<SubWeapon.WeaponSelect> _itemBoxList =
-        new List<SubWeapon.WeaponSelect>();
+    [SerializeField] private List<Inventory.WeaponSelect> _itemBoxList =
+        new List<Inventory.WeaponSelect>();
     [SerializeField] private int _item = 0;
     private bool _openBox = default;
 
@@ -25,6 +25,7 @@ public class treasureBox : MonoBehaviour
 
     private void WeaponGet()
     {
+        //選ぶオブジェクトを右に
         if (Input.GetKeyDown(KeyCode.X))
         {
             if (_item == _itemBoxList.Count-1)
@@ -36,6 +37,7 @@ public class treasureBox : MonoBehaviour
                 _item = _item+1;
             }
         }
+        //選ぶオブジェクトを左に
         if (Input.GetKeyDown(KeyCode.Z))
         {
             if (_item == 0)
@@ -47,27 +49,29 @@ public class treasureBox : MonoBehaviour
                 _item = _item-1;
             }
         }
+        //選択中の武器をインベントリに入れるように
         if (Input.GetKeyDown(KeyCode.G))
         {
             inventorycs = _Invent.GetComponent<Inventory>();
-            print(_itemBoxList[_item]);
             inventorycs.InventBox(_itemBoxList[_item]);
         }
 
     }
     private void OnTriggerStay2D(Collider2D collision)
     {
-        if (collision.gameObject.CompareTag("Player"))
-        {
-            if (!_openBox)
-            {
+        if (collision.gameObject.CompareTag("Player")&&!_openBox)
+        {     
                 if (Input.GetKey(KeyCode.F))
                 {
                     print("宝箱");
                     print(_itemBoxList.Count);
                     _openBox = true;
-                }           
-            }
+                }                     
         }
+        /*宝箱のオブジェクトにプレイヤーが触れている間
+         * 宝箱を開けるかどうかを受け付ける
+         * もし開けた場合_openBoxを真にし
+         * アップデート文を呼び出す
+         */
     }
 }
