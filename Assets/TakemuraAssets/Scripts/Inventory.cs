@@ -5,18 +5,18 @@ using UnityEngine;
 
 public class Inventory : MonoBehaviour
 {
+    //プレイヤーにつけていいクラス
     public enum WeaponSelect
     {
         nasi = 0,
-        Sword = 1,
-        Kunai = 2,
-        _boomerang = 3,
-        kamaitachi = 4,
+        Kunai = 1,
+        _boomerang = 2,
+        kamaitachi = 3,
     }
     //[SerializeField]
     //private List<SubWeapon.WeaponSelect> _itemBoxList =
     //   new List<SubWeapon.WeaponSelect>();
-    [SerializeField] public WeaponSelect[]_inventory = { 0, (WeaponSelect)(int)1,0 };
+    [SerializeField] public WeaponSelect[]_inventory = { 0,0,0 };
     public int _maxIndex = 2;
   
     //List<SubWeapon.WeaponSelect>

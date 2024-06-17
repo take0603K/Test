@@ -38,16 +38,14 @@ public class SubWeapon : MonoBehaviour
 
     private Vector2 _playerPos;
     PrayerC playerScript;
-    public int _damage=0;
-    private int _indexCnt = 1;
-    private Inventory _weaponInventory;
-  
+   [SerializeField] private int _indexCnt = 1;
+    public bool _isOpenBox = default;
+
+    //インベントリが入っているオブジェクトを格納
+    [SerializeField] Inventory _weaponInventory;
   
     void Start()
     {
-
-
-
         _playerPos = player.transform.position;
        // kunai.transform.position = _playerPos;
         playerScript = player.GetComponent<PrayerC>();
@@ -58,16 +56,21 @@ public class SubWeapon : MonoBehaviour
          **/
 
         _boomerang.SetActive(false);
-        kamaitachi.SetActive(false);    
+        kamaitachi.SetActive(false);
+       
     }
     void Update()
     {
+     
+        //以下テスト用
+    }
+    public void SubWeaponUpdate()
+    {
         //選択されている武器をアップデートに呼び出す
-      switch(_weaponInventory._inventory[_indexCnt])
+        switch (_weaponInventory._inventory[_indexCnt])
         {
             case Inventory.WeaponSelect.nasi:
-                break;
-            case Inventory.WeaponSelect.Sword:
+                print("test");
                 break;
             case Inventory.WeaponSelect.Kunai:
                 KunaiWeapon();
@@ -79,27 +82,17 @@ public class SubWeapon : MonoBehaviour
                 KamaitachiWeapon();
                 break;
         }
-        //武器の切り替え
-        //テスト用の機能なのでインベントリ機能ができたら置き換わります
-        if (Input.GetKeyDown(KeyCode.R))
+        //もし宝箱開封中でなければ武器を切り替えれるようにする
+        if (!_isOpenBox)
         {
-            if (_indexCnt == _weaponInventory._maxIndex)
-            {
-                _indexCnt = 0;
-                print("現在のインベントリ番号" + _indexCnt);
-            }
-            else
-            {
-                _indexCnt = _indexCnt + 1;
-                print("現在のインベントリ番号" + _indexCnt);
-            }
+            NotOpenBox();
         }
+
         //ブーメランの移動処理スイッチ文に入れると多分ばぐります
         if (_exists_boomerang)
         {
             _boomerangOperation();
         }
-        //以下テスト用
     }
    
     IEnumerator WeaponCoroutine(float time,int switchCor)
@@ -127,6 +120,35 @@ public class SubWeapon : MonoBehaviour
                 //    break;
                 //case 4:
                 //break;
+        }
+    }
+    private void NotOpenBox()
+    {
+        if (Input.GetKeyDown(KeyCode.R))
+        {
+            if (_indexCnt == _weaponInventory._maxIndex)
+            {
+                _indexCnt = 0;
+                print("現在のインベントリ番号" + _indexCnt);
+            }
+            else
+            {
+                _indexCnt = _indexCnt + 1;
+                print("現在のインベントリ番号" + _indexCnt);
+            }
+        }
+        if(Input.GetKeyDown(KeyCode.L))
+        {
+            if (_indexCnt == 0)
+            {
+                _indexCnt = _weaponInventory._maxIndex;
+                print("現在のインベントリ番号" + _indexCnt);
+            }
+            else
+            {
+                _indexCnt = _indexCnt - 1;
+                print("現在のインベントリ番号" + _indexCnt);
+            }
         }
     }
     private void KamaitachiWeapon()
@@ -185,13 +207,16 @@ public class SubWeapon : MonoBehaviour
             //右に飛ばすelseは左
             if (playerScript.rightNow)
             {
+                newkunai.transform.Rotate(new Vector3(0, 0, -90));            
                 this.kunaiRd.AddForce(new Vector2(1500f, 0f));
+                Destroy(newkunai, time);
             }
             else
             {
+                newkunai.transform.Rotate(new Vector3(0, -180, -90));
                 this.kunaiRd.AddForce(new Vector2(-1500f, 0f));
+                Destroy(newkunai, time);
             }
-            Destroy(newkunai, time);
           
         }
        
