@@ -8,6 +8,7 @@ public class TriggerIcon : MonoBehaviour
 {
     //ボタンが三つ格納されたゲームオブジェクトを格納
     [SerializeField] private GameObject _skill = default(GameObject);
+    [SerializeField] private ListCharacter _listChara = new ListCharacter();
     [SerializeField] private int _skillIndex = default;
     [SerializeField] private int _character = 0;
     [SerializeField] private bool _isPlayer=false;
@@ -67,8 +68,8 @@ public class TriggerIcon : MonoBehaviour
         }
         else
         {
-            //_skill[_skillIndex].SetActive(false);
-            if(_isPlayer)
+           // _skill[_skillIndex].SetActive(false);
+            if (_isPlayer)
             {
                 switch (CharacterBotton)
                 {
@@ -99,7 +100,6 @@ public class TriggerIcon : MonoBehaviour
                         break;
                 }
                 print("対象が選ばれました1");
-                print(_character);
             }
             else
             {
@@ -133,8 +133,8 @@ public class TriggerIcon : MonoBehaviour
                       
                 }
                 print("対象が選ばれました2");
-                print(_character);
-            }          
+            }
+            _listChara.ButtonColor(_character);
         }      
     }
 }

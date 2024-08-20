@@ -19,6 +19,8 @@ public class GameProgress : MonoBehaviour
     //リストを格納
     [Header("プレイヤー１")][SerializeField] ListCharacter _listCharaP1;
     [Header("プレイヤー２")][SerializeField] ListCharacter _listCharaP2;
+    //キャラクターのステータス状態を格納
+    [Header("キャラクターステータス")][SerializeField] StateCharacter _stateCharacter;
 
     private bool _awaitSKil = default;
     //プレイヤーを待つ
@@ -39,6 +41,9 @@ public class GameProgress : MonoBehaviour
         GameControl(1,_lastTurn);
         _listCharaP1.CharacterSet();
         _listCharaP2.CharacterSet();
+
+        //キャラクターステータスの管理
+        _stateCharacter.StartStateSet();
     }
     public void WaitPlayer()
     {
@@ -48,7 +53,6 @@ public class GameProgress : MonoBehaviour
         {
             _awaitPlayer = 0;
             _awaitSKil = true;
-            print("test2");
         }
     }
 
@@ -57,7 +61,6 @@ public class GameProgress : MonoBehaviour
         while(turn<=lastTurn)
         {
             _turnText.text = "Turn" + turn;
-            print("テスト1");
             _classPlayerSp1.SpManagement(turn);
             _classPlayerSp2.SpManagement(turn);
 
@@ -72,7 +75,6 @@ public class GameProgress : MonoBehaviour
             //リストの並び替えを呼び出す
             _listCharaP1.SortList();
             _listCharaP2.SortList();
-            print("テスト2");
             turn = turn + 1;
         }
         _turnText.text = "DorwGame";

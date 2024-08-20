@@ -61,10 +61,11 @@ public class Character : ScriptableObject
 
     
 
-    [Header("スキル関数ナンバー・消費SP・速度・効果値・追加スキルナンバー・効果値・ターゲット")]
-    [SerializeField] private int[] Skill1 = new int[7];
-    [SerializeField] private int[] Skill2 = new int[7];
-    [SerializeField] private int[] Skill3 = new int[7];
+    [Header("スキル所属ナンバー・スキルナンバー・速度・消費SP・効果値・" )]
+    [Header("追加スキル所属ナンバー・スキルナンバー・効果値・タゲ・使用者・継続ターン数")]
+    [SerializeField] private int[] Skill1 = new int[11];
+    [SerializeField] private int[] Skill2 = new int[11];
+    [SerializeField] private int[] Skill3 = new int[11];
     //インスペクター上に二次元以上の配列を表示するにはちょっとした工夫が必要らしい
 
 

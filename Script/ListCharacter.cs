@@ -54,10 +54,6 @@ public class ListCharacter : MonoBehaviour
     {
         return _selectCharacterList;
     }
-    private void Start()
-    {
-        CharacterSet();
-    }
     public void CharacterSet()
     {
         //セレクトしたキャラを格納する
@@ -78,7 +74,6 @@ public class ListCharacter : MonoBehaviour
         {
             _sprites[i] = _skillButton[i].GetComponent<Image>();
         }
-        _stateCharacter.StartStateSet();
     }
     public void GetSp(int Sp)
     {
@@ -87,9 +82,10 @@ public class ListCharacter : MonoBehaviour
     }
     public void SortList()
     {
+        print(_skillList + "スキルの数だよ");
         _listSort.MergeList(_skillList);
     }
-    private void ButtonColor(int CharaNo)
+    public void ButtonColor(int CharaNo)
     {
         //選択されたキャラクターのsyキル待機状態をボタンに反映
        for(int i=0;i<=2;i++)
@@ -120,7 +116,7 @@ public class ListCharacter : MonoBehaviour
                 CharaNoPlayer = CharaNo - 5;
             }
             //ここでボタンの色を確認する
-            ButtonColor(CharaNoPlayer);
+            ButtonColor(CharaNo);
             switch (selectSKill)
             {
                 //_isSkillはboolの二次元配列
@@ -131,7 +127,7 @@ public class ListCharacter : MonoBehaviour
                         //スキルをリストから削除
                         _skillList.Remove(_selectCharacterList[CharaNoPlayer].GetSkill());
                         //減らしたテストSPを元に戻す
-                        _testSp = _testSp + _selectCharacterList[CharaNoPlayer].GetSkill()[1];
+                        _testSp = _testSp + _selectCharacterList[CharaNoPlayer].GetSkill()[3];
                         _isSkill[CharaNo, 0] = false;
                         print(_testSp);
                         print("解除されましたスキル１");
@@ -139,7 +135,7 @@ public class ListCharacter : MonoBehaviour
                         
                     }
                     //現在のテストSPと選択されたキャラのスキル１の消費SPを比較して足りていれば使用を許可
-                    else if (_testSp >= _selectCharacterList[CharaNoPlayer].GetSkill()[1])
+                    else if (_testSp >= _selectCharacterList[CharaNoPlayer].GetSkill()[3])
                     {
                         print("ターゲットを選んでくださいスキル１");
                         //ここにターゲットを入れるための処理
@@ -149,14 +145,15 @@ public class ListCharacter : MonoBehaviour
                         _triggerIcon._targetSkill = false;
                         _triggerIcon._targetSkillSet = false;
                         //選択済のスキルのターゲットを格納
-                        _selectCharacterList[CharaNoPlayer].GetSkill()[6] = _triggerIcon.GetCharacter();
+                        _selectCharacterList[CharaNoPlayer].GetSkill()[8] = _triggerIcon.GetCharacter();
+                        _selectCharacterList[CharaNoPlayer].GetSkill()[9] = CharaNo;
                         //スキルをリストに格納
                         _skillList.Add(_selectCharacterList[CharaNoPlayer].GetSkill());
                         //テストSPを減少
                         _testSp = _testSp - _selectCharacterList[CharaNoPlayer].GetSkill()[1];
                         _isSkill[CharaNo, 0] = true;
                         print(_testSp);
-                        //_stay = false;
+                        _stay = false;
                     }
                     break;
                 case "skill2":
@@ -166,13 +163,13 @@ public class ListCharacter : MonoBehaviour
                         //スキルをリストから削除
                         _skillList.Remove(_selectCharacterList[CharaNoPlayer].GetSkill2());
                         //減らしたテストSPを元に戻す
-                        _testSp = _testSp + _selectCharacterList[CharaNoPlayer].GetSkill2()[1];
+                        _testSp = _testSp + _selectCharacterList[CharaNoPlayer].GetSkill2()[3];
                         _isSkill[CharaNo, 1] = false;
                         print(_testSp);
                         print("解除されましたスキル２");
                     }
                     //現在のテストSPと選択されたキャラのスキル２の消費SPを比較して足りていれば使用を許可
-                    else if (_testSp >= _selectCharacterList[CharaNoPlayer].GetSkill2()[1])
+                    else if (_testSp >= _selectCharacterList[CharaNoPlayer].GetSkill2()[3])
                     {
                         print("ターゲットを選んでくださいスキル２");
                         //ここにターゲットを入れるための処理
@@ -182,11 +179,12 @@ public class ListCharacter : MonoBehaviour
                         _triggerIcon._targetSkill = false;
                         _triggerIcon._targetSkillSet = false;
                         //選択済のスキルのターゲットを格納
-                        _selectCharacterList[CharaNoPlayer].GetSkill2()[6] = _triggerIcon.GetCharacter();
+                        _selectCharacterList[CharaNoPlayer].GetSkill2()[8] = _triggerIcon.GetCharacter();
+                        _selectCharacterList[CharaNoPlayer].GetSkill2()[9] = CharaNo;
                         //スキルをリストに格納
                         _skillList.Add(_selectCharacterList[CharaNoPlayer].GetSkill2());
                         //テストSPを減少
-                        _testSp = _testSp - _selectCharacterList[CharaNoPlayer].GetSkill2()[1];
+                        _testSp = _testSp - _selectCharacterList[CharaNoPlayer].GetSkill2()[3];
                         _isSkill[CharaNo, 1] = true;
                         print(_testSp);
                         //_stay = false;
@@ -199,13 +197,12 @@ public class ListCharacter : MonoBehaviour
                         //スキルをリストから削除
                         _skillList.Remove(_selectCharacterList[CharaNoPlayer].GetSkill3());
                         //減らしたテストSPを元に戻す
-                        _testSp = _testSp + _selectCharacterList[CharaNoPlayer].GetSkill3()[1];
+                        _testSp = _testSp + _selectCharacterList[CharaNoPlayer].GetSkill3()[3];
                         _isSkill[CharaNo, 2] = false;
-                        print(_testSp);
                         print("解除されましたスキル３");
                     }
                     //現在のテストSPと選択されたキャラのスキル３の消費SPを比較して足りていれば使用を許可
-                    else if (_testSp >= _selectCharacterList[CharaNoPlayer].GetSkill3()[1])
+                    else if (_testSp >= _selectCharacterList[CharaNoPlayer].GetSkill3()[3])
                     {
                         print("ターゲットを選んでくださいスキル３");
                         //ここにターゲットを入れるための処理
@@ -215,21 +212,20 @@ public class ListCharacter : MonoBehaviour
                         _triggerIcon._targetSkill = false;
                         _triggerIcon._targetSkillSet = false;
                         //選択済のスキルのターゲットを格納
-                        _selectCharacterList[CharaNoPlayer].GetSkill3()[6] = _triggerIcon.GetCharacter();
+                        _selectCharacterList[CharaNoPlayer].GetSkill3()[8] = _triggerIcon.GetCharacter();
+                        _selectCharacterList[CharaNoPlayer].GetSkill3()[9] = CharaNo;
                         //スキルをリストに格納
                         _skillList.Add(_selectCharacterList[CharaNoPlayer].GetSkill3());
                         //テストSPを減少
-                        _testSp = _testSp - _selectCharacterList[CharaNoPlayer].GetSkill3()[1];
+                        _testSp = _testSp - _selectCharacterList[CharaNoPlayer].GetSkill3()[3];
                         _isSkill[CharaNo, 2] = true;
                         print(_testSp);
                         //_stay = false;
                     }
                     break;
             }
-            ButtonColor(CharaNoPlayer);
+            ButtonColor(CharaNo);
             _stay = false;
         }
-       
-      
     }
 }
